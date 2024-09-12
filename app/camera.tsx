@@ -7,18 +7,20 @@ import {
   useCameraPermissions,
   CameraPictureOptions,
 } from "expo-camera";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CaptureButton } from "@/components/CameraButton";
 import { finalizeUpload, generateUploadUrl } from "@/sdk";
 import getHeaders from "happy-headers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { ProfileContext } from "./_layout";
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef<CameraView>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const userContext = useContext(ProfileContext);
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }

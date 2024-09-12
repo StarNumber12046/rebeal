@@ -7,18 +7,27 @@ import { CameraButton } from "@/components/CameraButton";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getHeaders from "happy-headers";
-import { getFriendsPosts, getMyPosts, UserPost } from "@/sdk";
+import {
+  checkToken,
+  FullUser,
+  getFriendsPosts,
+  getMyPosts,
+  getMyProfile,
+  UserPost,
+} from "@/sdk";
 import { ScrollView } from "react-native-gesture-handler";
+import { ProfileContext } from "./_layout";
 
 export default function App() {
   const [visibleItems, setVisibleItems] = useState<{ [key: string]: boolean }>(
     {}
   );
   // State to check if the component is mounted
-  const [isMounted, setIsMounted] = useState(false);
+  const [isUsable, setIsUsable] = useState(false);
   const [friendsPosts, setFriendsPosts] = useState<any[]>([]);
   const [myPosts, setMyPosts] = useState<UserPost[]>([]);
-
+  const [me, setMe] = useState<FullUser | null>(null);
+  const userContext = useContext(ProfileContext);
   async function checkAuth() {
     if (
       !(await AsyncStorage.getItem("authToken")) ||
@@ -30,14 +39,22 @@ export default function App() {
   }
 
   // Use useEffect to check if the component is mounted
+  checkToken().then(() => {
+    setIsUsable(true);
+  });
   useEffect(() => {
-    setIsMounted(true);
-    if (isMounted) {
-      checkAuth();
-      getFriendsPosts().then((p) => setFriendsPosts(p));
-      getMyPosts().then((p) => setMyPosts(p));
+    if (isUsable) {
+      setMyPosts([]);
+      setFriendsPosts([]);
+      setMe(null);
+      if (isUsable) {
+        checkAuth();
+        getFriendsPosts().then((p) => setFriendsPosts(p));
+        getMyPosts().then((p) => setMyPosts(p));
+        getMyProfile(userContext).then((p) => setMe(p));
+      }
     }
-  }, [isMounted]);
+  }, [isUsable]);
 
   const handleVisibilityChange = (id: string, isVisible: boolean) => {
     setVisibleItems((prevState) => ({
@@ -48,7 +65,13 @@ export default function App() {
 
   return (
     <View>
-      <TopBar />
+      <TopBar
+        action={() => {
+          getFriendsPosts().then((p) => setFriendsPosts(p));
+          getMyPosts().then((p) => setMyPosts(p));
+          getMyProfile(userContext).then((p) => setMe(p));
+        }}
+      />
       <IOScrollView style={styles.scrollView}>
         <ScrollView
           horizontal
@@ -83,32 +106,34 @@ export default function App() {
             </InView>
           ))}
         </ScrollView>
-        {friendsPosts.map((value) => (
-          <InView
-            key={value.id}
-            onChange={(inView) => handleVisibilityChange(value.id, inView)}
-          >
-            <ReBeal
-              primaryHeight={value.primary.height}
-              primaryWidth={value.primary.width}
-              primaryUrl={value.primary.url}
-              secondaryHeight={value.secondary.height}
-              secondaryWidth={value.secondary.width}
-              secondaryUrl={value.secondary.url}
-              userName={value.user.username}
-              userUrl={value.user.profilePicture.url}
-              isLate={value.isLate}
-              postedAt={value.postedAt}
-              lateInSeconds={value.lateInSeconds}
-              isMain={value.isMain}
-              visible={visibleItems[value.id]} // Pass visibility state here
-              blurred={myPosts.length <= 0}
-            />
-          </InView>
-        ))}
-        <View style={{ width: "100%", height: 75 }}></View>
+        <View style={{ width: "100%", top: -80 }}>
+          {friendsPosts.map((value) => (
+            <InView
+              key={value.id}
+              onChange={(inView) => handleVisibilityChange(value.id, inView)}
+            >
+              <ReBeal
+                primaryHeight={value.primary.height}
+                primaryWidth={value.primary.width}
+                primaryUrl={value.primary.url}
+                secondaryHeight={value.secondary.height}
+                secondaryWidth={value.secondary.width}
+                secondaryUrl={value.secondary.url}
+                userName={value.user.username}
+                userUrl={value.user.profilePicture.url}
+                isLate={value.isLate}
+                postedAt={value.postedAt}
+                lateInSeconds={value.lateInSeconds}
+                isMain={value.isMain}
+                visible={visibleItems[value.id]} // Pass visibility state here
+                blurred={myPosts.length <= 0}
+              />
+            </InView>
+          ))}
+          <View style={{ width: "100%", height: 0 }}></View>
+        </View>
       </IOScrollView>
-      <CameraButton />
+      <CameraButton shown={me?.canPost ?? true} />
     </View>
   );
 }
@@ -123,11 +148,9 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     position: "static",
-    top: -80,
-    paddingTop: 80,
+    top: 0,
     left: 0,
     width: "100%",
-    marginBottom: 10,
   },
   container: {
     flex: 1, // Fill the available space

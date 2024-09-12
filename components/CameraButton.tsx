@@ -1,9 +1,9 @@
 import { Link } from "expo-router";
 import { Pressable, View, StyleSheet, TouchableOpacity } from "react-native";
 
-export function CameraButton() {
+export function CameraButton({ shown }: { shown: boolean }) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { opacity: shown ? 1 : 0 }]}>
       <Link href="/camera">
         <View style={styles.cameraButton} />
       </Link>

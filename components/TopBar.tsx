@@ -1,12 +1,20 @@
 import { ProfileContext, ProfileContextType } from "@/app/_layout";
 import { getMyProfile } from "@/sdk";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import getHeaders from "happy-headers";
 import { useContext, useEffect, useState } from "react";
 import { View, Pressable, Text, Image, StyleSheet } from "react-native";
 
-export const TopBar = ({ small = false }: { small?: boolean }) => {
+export const TopBar = ({
+  small = false,
+  action = () => {
+    router.navigate("/");
+  },
+}: {
+  small?: boolean;
+  action?: () => void;
+}) => {
   const userContext = useContext(ProfileContext);
   const [profilePicture, setProfilePicture] =
     useState<string>("rebeal://profile");
@@ -28,9 +36,9 @@ export const TopBar = ({ small = false }: { small?: boolean }) => {
           <MaterialIcons name="people" size={24} color="white" />
         </Link>
       )}
-      <Link href="/">
+      <Pressable onPress={() => action()}>
         <Text style={styles.text}>ReBeal.</Text>
-      </Link>
+      </Pressable>
       {!small && (
         <Link href="/profile" asChild>
           <Pressable>
