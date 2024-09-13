@@ -15,7 +15,9 @@ jobs:
           cache: "yarn"
           cache-dependency-path: "yarn.lock"
       - uses: mskelton/setup-yarn@v1
-
+      - uses: actions/setup-java@v2
+        with:
+          juava-version: "17"
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
         with:
