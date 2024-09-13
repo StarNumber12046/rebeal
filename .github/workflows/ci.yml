@@ -2,6 +2,8 @@ on:
   push:
     tags:
       - "v*"
+permissions:
+  contents: write
 name: Build and release
 jobs:
   build:
