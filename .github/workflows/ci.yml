@@ -14,6 +14,8 @@ jobs:
           node-version: "14"
           cache: "yarn"
           cache-dependency-path: "yarn.lock"
+      - uses: mskelton/setup-yarn@v1
+
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
         with:
