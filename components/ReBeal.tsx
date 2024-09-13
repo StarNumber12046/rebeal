@@ -11,6 +11,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from "react-native";
+import { Href, router } from "expo-router";
 
 function formatRelativeDate(date: number) {
   const now = new Date();
@@ -117,6 +118,7 @@ export function ReBeal({
   isMain,
   visible,
   blurred,
+  userId,
 }: {
   primaryUrl: string;
   secondaryUrl: string;
@@ -132,6 +134,7 @@ export function ReBeal({
   isMain: boolean;
   visible: boolean;
   blurred: boolean;
+  userId: string;
 }) {
   console.log(blurred);
   const [bigImage, setBigImage] = useState<"primary" | "secondary">("primary");
@@ -160,7 +163,7 @@ export function ReBeal({
           <View style={styles.userInfoView}>
             <Pressable
               onPress={() => {
-                setBigImage(bigImage === "primary" ? "secondary" : "primary");
+                router.push(("/user/" + userId) as Href<string>);
               }}
             >
               <Text style={styles.userName}>{userName}</Text>

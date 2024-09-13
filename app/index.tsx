@@ -113,6 +113,7 @@ export default function App() {
               onChange={(inView) => handleVisibilityChange(value.id, inView)}
             >
               <ReBeal
+                userId={value.user.id}
                 primaryHeight={value.primary.height}
                 primaryWidth={value.primary.width}
                 primaryUrl={value.primary.url}
