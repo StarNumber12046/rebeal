@@ -18,6 +18,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           java-version: "17"
+          distribution: "oracle"
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
         with:
