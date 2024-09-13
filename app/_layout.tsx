@@ -94,6 +94,7 @@ export default function RootLayout() {
               name="suggestedFriends"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="camera" options={{ headerShown: false }} />
             <Stack.Screen name="user/[user]" options={{ headerShown: false }} />
           </Stack>
         </GestureHandlerRootView>

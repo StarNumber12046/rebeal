@@ -1,4 +1,12 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ActivityIndicatorBase,
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { Buffer } from "buffer";
 import {
@@ -19,28 +27,32 @@ export default function Camera() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef<CameraView>(null);
-  const [cameraReady, setCameraReady] = useState(false);
-  const userContext = useContext(ProfileContext);
+  const [workInProgress, setWorkInProgress] = useState(false);
+  const [status, setStatus] = useState<string>("");
+  const [error, setError] = useState<string>("");
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
   async function takePicture() {
     const authToken = await AsyncStorage.getItem("authToken");
+    console.log("async takePicture() -> Promise<void>");
     if (ref.current) {
+      console.log("Taking picture");
       const options: CameraPictureOptions = {
         quality: 0.5,
         base64: true,
         exif: false,
       };
-      console.log("Taking primary picture");
+      setWorkInProgress(true);
+      setStatus("Taking primary picture");
       const primary = await ref.current.takePictureAsync(options);
       console.log("P: " + primary?.uri);
       toggleCameraFacing();
-      await sleep(5000);
-      console.log("Taking secondary picture");
+      await sleep(500);
+      setStatus("Taking secondary picture");
       const secondary = await ref.current?.takePictureAsync(options);
       console.log("S: " + secondary?.uri);
-      toggleCameraFacing();
+      setStatus("Converting images");
       const webpPrimary = await manipulateAsync(primary?.uri ?? "", [], {
         format: SaveFormat.WEBP,
         base64: true,
@@ -51,7 +63,11 @@ export default function Camera() {
       });
       console.log("WebP: " + webpPrimary?.uri);
       console.log("WebP: " + webpSecondary?.uri);
-      const uploads = await generateUploadUrl();
+      setStatus("Generating upload urls");
+      const uploads = await generateUploadUrl().catch((e) => {
+        setError(e.message);
+        return;
+      });
       const primaryUpload = uploads[0];
       const secondaryUpload = uploads[1];
       const primaryHeaders = primaryUpload.headers;
@@ -70,15 +86,23 @@ export default function Camera() {
         Authorization: `Bearer ${authToken}`,
         ...getHeaders(),
       });
+      setStatus("Uploading images 1/2");
       await fetch(primaryUrl, {
         method: "PUT",
         headers: primaryHeaders,
         body: Buffer.from(primary?.base64 ?? "", "base64"),
+      }).catch((e) => {
+        setError(e.message);
+        return;
       });
+      setStatus("Uploading images 2/2");
       await fetch(secondaryUrl, {
         method: "PUT",
         headers: secondaryHeaders,
         body: Buffer.from(secondary?.base64 ?? "", "base64"),
+      }).catch((e) => {
+        setError(e.message);
+        return;
       });
       console.log("Upload stats: ");
       console.log(
@@ -87,6 +111,7 @@ export default function Camera() {
       console.log(
         `Secondary: {\n\tBucket: ${secondaryBucket}\n\tPath: ${secondaryPath}\n}`
       );
+      setStatus("Finalizing upload");
       const post_data = {
         isLate: false,
         retakeCounter: 0,
@@ -107,10 +132,16 @@ export default function Camera() {
       };
       console.log(JSON.stringify(post_data));
       const resp = await finalizeUpload(post_data);
-      console.log(resp);
+      if (!resp.ok) {
+        console.log("Error finalizing upload");
+        setError(resp.statusText);
+      }
+      setWorkInProgress(false);
+      setStatus("");
+      setError("");
       router.navigate("/");
     } else {
-      console.log("Ref is null");
+      setError("Ref is null");
     }
   }
 
@@ -137,6 +168,16 @@ export default function Camera() {
 
   return (
     <View style={styles.container}>
+      <View
+        style={[
+          styles.statusContainer,
+          { opacity: workInProgress ? 1 : 0, zIndex: workInProgress ? 100 : 0 },
+        ]}
+      >
+        <ActivityIndicator size="large" color="white" />
+        <Text style={styles.status}>{status}</Text>
+        <Text style={styles.error}>{error}</Text>
+      </View>
       <CameraView ref={ref} style={styles.camera} facing={facing} ratio="4:3">
         <View style={styles.buttonContainer}>
           <CaptureButton
@@ -178,5 +219,27 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "white",
+  },
+  statusContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100,
+    flexDirection: "column",
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  status: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+  },
+  error: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "red",
   },
 });
