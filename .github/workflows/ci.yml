@@ -1,0 +1,44 @@
+on:
+  push:
+    tags:
+      - "v*"
+name: Build and release
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📦 Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: 🚀 Build
+        run: eas build --profile preview --non-interactive --platform android --local --output=./ReBeal-release.apk
+      - name: 😊 Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ReBeal ${{ github.ref_name }}
+          release_name: Release ${{ github.run_number }}
+      - name: 😀 Release
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./ReBeal-release.apk
+          asset_name: ReBeal-release.apk
+          asset_content_type: application/vnd.android.package-archive

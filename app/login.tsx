@@ -12,7 +12,7 @@ import { useContext, useState } from "react";
 import { mapPrefixToFlag } from "@/phoneNumber";
 import { getCountryFlagEmojiFromCountryCode } from "country-codes-flags-phone-codes";
 import { TopBar } from "@/components/TopBar";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ProfileContext } from "./_layout";
 
@@ -135,6 +135,9 @@ export default function LoginScreen() {
           onChange={handleChange}
         ></TextInput>
       </View>
+      <Text style={styles.topText}>
+        Not working? Try <Link href="/tokenLogin">Token Login</Link>
+      </Text>
       <Text>{error}</Text>
       <Pressable
         style={styles.buttonContainer}

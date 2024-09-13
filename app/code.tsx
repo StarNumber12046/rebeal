@@ -168,6 +168,9 @@ export default function OTPScreen() {
           }}
         ></TextInput>
       </View>
+      <Text>
+        Not working? Try <Link href="/tokenLogin">Token Login</Link>
+      </Text>
       <Text style={styles.error}>{error}</Text>
       <Pressable
         disabled={!enabled}

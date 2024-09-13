@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View, Image } from "react-native";
 import { TopBar } from "@/components/TopBar";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { MenuBar } from "@/components/MenuBar";
 import {
   FullUser,
@@ -41,74 +41,95 @@ export default function ProfileScreen() {
   }, [userContext]);
 
   return (
-    <View style={styles.container}>
-      <MenuBar arrowLocation={"left" as "left"} title={"Profile"} />
-      <Image
-        source={{
-          uri: userProfile?.profilePicture.url ?? "rebeal://profile.png",
-          width: 130,
-          height: 130,
-        }}
-        style={styles.profilePicture}
-      />
-      <Text style={styles.userName}>{userProfile?.fullname}</Text>
-      <Text style={styles.userHandle}>{userProfile?.username}</Text>
-      <Text style={styles.smallText}>{userProfile?.biography}</Text>
-      <Text style={styles.smallText}>{userProfile?.location}</Text>
-      <Text
-        style={{ fontWeight: 500, color: "white", fontSize: 18, marginTop: 10 }}
-      >
-        {(userProfile?.streakLength ?? 0) > 0 &&
-          "🔥 " + userProfile?.streakLength}
-      </Text>
-      <View
-        style={{
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ fontWeight: 500, color: "white", fontSize: 24 }}>
-          Pins
-        </Text>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
-          <MaterialIcons name="people" size={18} color="#ffffff90" />
-          <Text style={styles.smallerText}>Visible to your friends</Text>
-        </View>
-      </View>
-      <View
-        style={{
-          marginTop: -20,
-          marginHorizontal: -10,
-          flexDirection: "row",
-          alignItems: "flex-start",
-          justifyContent: "space-evenly",
-        }}
-      >
-        {pins?.pinnedMemories.map((pin) => (
-          <Pin
-            key={pin.id}
-            primaryUrl={pin.primary.url}
-            secondaryUrl={pin.secondary.url}
-            primaryWidth={pin.primary.width}
-            primaryHeight={pin.primary.height}
-            secondaryWidth={pin.secondary.width}
-            secondaryHeight={pin.secondary.height}
-            date={pin.memoryDay}
-          />
-        ))}
-      </View>
+    <View style={{ flex: 1 }}>
       <Pressable
-        onPress={() => {
-          rTokenStorage
-            .removeItem()
-            .then(() =>
-              aTokenStorage.removeItem().then(() => router.push("/login"))
-            );
+        onPress={() => router.push("/dev")}
+        style={{
+          zIndex: 99,
+          right: 20,
+          top: 50,
+          position: "absolute",
+          padding: 10,
         }}
       >
-        <Text style={styles.text}>Sign out</Text>
+        <Text style={{ color: "white", fontSize: 24 }}>
+          <MaterialIcons name="developer-mode" size={24} color="white" />
+        </Text>
       </Pressable>
+      <View style={styles.container}>
+        <MenuBar arrowLocation={"left" as "left"} title={"Profile"} />
+        <Image
+          source={{
+            uri: userProfile?.profilePicture.url ?? "rebeal://profile.png",
+            width: 130,
+            height: 130,
+          }}
+          style={styles.profilePicture}
+        />
+        <Text style={styles.userName}>{userProfile?.fullname}</Text>
+        <Text style={styles.userHandle}>{userProfile?.username}</Text>
+        <Text style={styles.smallText}>{userProfile?.biography}</Text>
+        <Text style={styles.smallText}>{userProfile?.location}</Text>
+        <Text
+          style={{
+            fontWeight: 500,
+            color: "white",
+            fontSize: 18,
+            marginTop: 10,
+          }}
+        >
+          {(userProfile?.streakLength ?? 0) > 0 &&
+            "🔥 " + userProfile?.streakLength}
+        </Text>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ fontWeight: 500, color: "white", fontSize: 24 }}>
+            Pins
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+            <MaterialIcons name="people" size={18} color="#ffffff90" />
+            <Text style={styles.smallerText}>Visible to your friends</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            marginTop: -20,
+            marginHorizontal: -10,
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "space-evenly",
+          }}
+        >
+          {pins?.pinnedMemories.map((pin) => (
+            <Pin
+              key={pin.id}
+              primaryUrl={pin.primary.url}
+              secondaryUrl={pin.secondary.url}
+              primaryWidth={pin.primary.width}
+              primaryHeight={pin.primary.height}
+              secondaryWidth={pin.secondary.width}
+              secondaryHeight={pin.secondary.height}
+              date={pin.memoryDay}
+            />
+          ))}
+        </View>
+        <Pressable
+          onPress={() => {
+            rTokenStorage
+              .removeItem()
+              .then(() =>
+                aTokenStorage.removeItem().then(() => router.push("/login"))
+              );
+          }}
+        >
+          <Text style={styles.text}>Sign out</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
