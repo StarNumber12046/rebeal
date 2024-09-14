@@ -116,6 +116,7 @@ export default function Onboarding() {
     console.log(await res.text());
     console.log(pushTokenString);
     setExpoPushToken(pushTokenString ?? "");
+    router.navigate("/");
   }
 
   return (
