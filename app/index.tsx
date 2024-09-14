@@ -107,30 +107,35 @@ export default function App() {
           ))}
         </ScrollView>
         <View style={{ width: "100%", top: -80 }}>
-          {friendsPosts.map((value) => (
-            <InView
-              key={value.id}
-              onChange={(inView) => handleVisibilityChange(value.id, inView)}
-            >
-              <ReBeal
-                userId={value.user.id}
-                primaryHeight={value.primary.height}
-                primaryWidth={value.primary.width}
-                primaryUrl={value.primary.url}
-                secondaryHeight={value.secondary.height}
-                secondaryWidth={value.secondary.width}
-                secondaryUrl={value.secondary.url}
-                userName={value.user.username}
-                userUrl={value.user.profilePicture.url}
-                isLate={value.isLate}
-                postedAt={value.postedAt}
-                lateInSeconds={value.lateInSeconds}
-                isMain={value.isMain}
-                visible={visibleItems[value.id]} // Pass visibility state here
-                blurred={myPosts.length <= 0}
-              />
-            </InView>
-          ))}
+          {friendsPosts.map(
+            (value) =>
+              value && (
+                <InView
+                  key={value.id}
+                  onChange={(inView) =>
+                    handleVisibilityChange(value.id, inView)
+                  }
+                >
+                  <ReBeal
+                    userId={value.user.id}
+                    primaryHeight={value.primary.height}
+                    primaryWidth={value.primary.width}
+                    primaryUrl={value.primary.url}
+                    secondaryHeight={value.secondary.height}
+                    secondaryWidth={value.secondary.width}
+                    secondaryUrl={value.secondary.url}
+                    userName={value.user.username}
+                    userUrl={(value.user.profilePicture ?? { url: "" }).url}
+                    isLate={value.isLate}
+                    postedAt={value.postedAt}
+                    lateInSeconds={value.lateInSeconds}
+                    isMain={value.isMain}
+                    visible={visibleItems[value.id]} // Pass visibility state here
+                    blurred={myPosts.length <= 0}
+                  />
+                </InView>
+              )
+          )}
           <View style={{ width: "100%", height: 0 }}></View>
         </View>
       </IOScrollView>
