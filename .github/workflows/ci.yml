@@ -16,6 +16,8 @@ jobs:
           node-version: "14"
           cache: "yarn"
           cache-dependency-path: "yarn.lock"
+      - name: 🔒 Decode google-services.json
+        run: echo "base64 --decode <<< '${{ secrets.GOOGLE_SERVICES_JSON }}'" > google-services.json
       - uses: mskelton/setup-yarn@v1
       - uses: actions/setup-java@v2
         with:
