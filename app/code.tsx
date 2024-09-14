@@ -148,7 +148,7 @@ export default function OTPScreen() {
     await AsyncStorage.setItem("authToken", access_token);
     await AsyncStorage.setItem("refreshToken", refresh_token);
     await AsyncStorage.setItem("expirationDate", expires_in.toString());
-    router.push("/profile");
+    router.push("/onboarding");
   }
 
   return (

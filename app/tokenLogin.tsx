@@ -10,7 +10,7 @@ export default function TokenLogin() {
   async function login() {
     AsyncStorage.setItem("authToken", accessToken);
     AsyncStorage.setItem("refreshToken", refreshToken);
-    router.push("/");
+    router.push("/onboarding");
   }
   const [error, setError] = useState<string>("");
   return (

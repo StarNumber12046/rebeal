@@ -98,6 +98,7 @@ export default function RootLayout() {
             <Stack.Screen name="user/[user]" options={{ headerShown: false }} />
             <Stack.Screen name="dev" options={{ headerShown: false }} />
             <Stack.Screen name="tokenLogin" options={{ headerShown: false }} />
+            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
           </Stack>
         </GestureHandlerRootView>
       </ThemeProvider>
