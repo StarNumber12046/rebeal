@@ -35,7 +35,7 @@
         "icon": "./assets/images/icon.png",
         "defaultChannel": "default",
         "sounds": [
-          "./local/assets/sounds/notification.wav"
+          "./assets/sounds/notification.wav"
         ]
       }]
     ],
