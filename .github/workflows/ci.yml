@@ -43,7 +43,9 @@ jobs:
         run: yarn expo prebuild --platform android
 
       - name: 🧩 Patch AndroidManifest
-        run: sed -i '/<meta-data android:name="com.google.firebase.messaging.default_notification_channel_id"/ s/>$/ tools:replace="android:value"\/>/' "android/app/src/main/AndroidManifest.xml"
+        run: |
+          sed -i '/<meta-data android:name="com.google.firebase.messaging.default_notification_channel_id"/ s/>$/ tools:replace="android:value"\/>/' "android/app/src/main/AndroidManifest.xml"
+          cat android/app/src/main/AndroidManifest.xml
 
       - name: 🚀 Build
         run: eas build --profile preview --non-interactive --platform android --local --output=./ReBeal-release.apk --clear-cache
