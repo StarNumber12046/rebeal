@@ -21,7 +21,7 @@ export default {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#000000",
       },
-      googleServicesFile: "android/app/google-services.json",
+      googleServicesFile: "./google-services.json",
       package: "com.rebeal",
     },
     web: {
