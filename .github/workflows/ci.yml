@@ -44,7 +44,7 @@ jobs:
 
       - name: 🧩 Patch AndroidManifest
         run: |
-          sed -i 's/android:name="com.google.firebase.messaging.default_notification_channel_id"/android:name="com.google.firebase.messaging.default_channel_id"/' "android/app/src/main/AndroidManifest.xml"
+          cp templates/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
           cat android/app/src/main/AndroidManifest.xml
 
       - name: 🚀 Build
