@@ -20,3 +20,7 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+
+credentials.json
+google-services.json
+creds.ts

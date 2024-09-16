@@ -21,7 +21,7 @@ export default {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#000000",
       },
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
+      googleServicesFile: "android/app/google-services.json",
       package: "com.rebeal",
     },
     web: {
@@ -37,6 +37,18 @@ export default {
           icon: "./assets/images/icon.png",
           defaultChannel: "default",
           sounds: ["./assets/sounds/notification.wav"],
+        },
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
+      [
+        "expo-build-properties",
+        {
+          ios: {
+            buildProperties: {
+              "app.build.version": `1.0.0`,
+            },
+          },
         },
       ],
     ],
