@@ -22,6 +22,8 @@ jobs:
         run: |
           echo "${{ secrets.ENCODED_GOOGLE_SERVICES }}" | base64 --decode > google-services.json
           echo "${{ secrets.ENCODED_CREDS }}" | base64 --decode > creds.ts
+          sed -i '/<meta-data android:name="com.google.firebase.messaging.default_notification_channel_id"/ s/>$/ tools:replace="android:value"\/>/' "android/app/src/main/AndroidManifest.xml"
+
           ls -la
 
       - uses: mskelton/setup-yarn@v1

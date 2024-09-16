@@ -1,3 +1,5 @@
+import { defineConfig } from "expo-build-properties";
+
 export default {
   expo: {
     name: "rebeal",
@@ -21,8 +23,23 @@ export default {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#000000",
       },
-      googleServicesFile: "./google-services.json",
+      googleServicesFile: process.env.GOOGLE_SERVICES_FILE,
       package: "com.rebeal",
+      config: {
+        googleServicesFile: "./google-services.json",
+      },
+      manifest: {
+        metaData: [
+          {
+            "android:name": "com.google.android.gms.vision.DEPENDENCIES",
+            "android:value": "barcode",
+            "tools:replace": "android:value",
+            tools: {
+              replace: "android:value",
+            },
+          },
+        ],
+      },
     },
     web: {
       bundler: "metro",
@@ -47,6 +64,11 @@ export default {
           ios: {
             buildProperties: {
               "app.build.version": `1.0.0`,
+            },
+          },
+          android: {
+            buildProperties: {
+              // Additional Android build properties if needed
             },
           },
         },
