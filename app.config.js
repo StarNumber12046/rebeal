@@ -23,7 +23,7 @@ export default {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#000000",
       },
-      googleServicesFile: process.env.GOOGLE_SERVICES_FILE,
+      googleServicesFile: "./google-services.json",
       package: "com.rebeal",
       config: {
         googleServicesFile: "./google-services.json",
