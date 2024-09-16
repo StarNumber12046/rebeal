@@ -35,7 +35,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: 🏃‍♂️ Prebuild
-        run: yarn expo prebuild --platform android --profile preview
+        run: yarn expo prebuild --platform android
 
       - name: 🔒 Decode google-services.json
         run: |
