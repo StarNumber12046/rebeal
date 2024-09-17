@@ -4172,6 +4172,11 @@ cosmiconfig@^5.0.5, cosmiconfig@^5.1.0:
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
 
+country-codes-flags-phone-codes@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/country-codes-flags-phone-codes/-/country-codes-flags-phone-codes-1.1.1.tgz#84c647470de04e59ef0d45d98d7aeac90c3209f9"
+  integrity sha512-90bZHByeKNlLKadeMWLBf8YNL0mHWdO2ESD8ts4ggYwmSo/vY3BGwMUQ2/lTfmMkQNLdIZNP1cjbiXWP9lEYIQ==
+
 create-jest@^29.7.0:
   version "29.7.0"
   resolved "https://registry.yarnpkg.com/create-jest/-/create-jest-29.7.0.tgz#a355c5b3cb1e1af02ba177fe7afd7feee49a5320"

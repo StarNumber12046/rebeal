@@ -43,6 +43,7 @@ async function registerForPushNotificationsAsync() {
 }
 
 export default function Onboarding() {
+  const userContext = useContext(ProfileContext);
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState<
     FirebaseMessagingTypes.RemoteMessage | undefined
@@ -86,7 +87,7 @@ export default function Onboarding() {
 
   async function onClick() {
     const pushTokenString = await registerForPushNotificationsAsync();
-    const userContext = useContext(ProfileContext);
+
     const body = {
       fcmToken: pushTokenString,
       region: (await getMyProfile(userContext)).region,

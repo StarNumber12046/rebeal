@@ -21,6 +21,7 @@
     "@react-native-firebase/app": "^20.5.0",
     "@react-native-firebase/messaging": "^20.5.0",
     "@react-navigation/native": "^6.0.2",
+    "country-codes-flags-phone-codes": "^1.1.1",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "expo": "~51.0.28",
