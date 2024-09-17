@@ -42,11 +42,6 @@ jobs:
       - name: 🏃‍♂️ Prebuild
         run: yarn expo prebuild --platform android
 
-      - name: 🧩 Patch AndroidManifest
-        run: |
-          cp templates/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
-          cat android/app/src/main/AndroidManifest.xml
-
       - name: 🚀 Build
         run: eas build --profile preview --non-interactive --platform android --local --output=./ReBeal-release.apk
 

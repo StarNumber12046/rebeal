@@ -28,18 +28,6 @@ export default {
       config: {
         googleServicesFile: "./google-services.json",
       },
-      manifest: {
-        metaData: [
-          {
-            "android:name": "com.google.android.gms.vision.DEPENDENCIES",
-            "android:value": "barcode",
-            "tools:replace": "android:value",
-            tools: {
-              replace: "android:value",
-            },
-          },
-        ],
-      },
     },
     web: {
       bundler: "metro",
@@ -48,14 +36,7 @@ export default {
     },
     plugins: [
       "expo-router",
-      [
-        "expo-notifications",
-        {
-          icon: "./assets/images/icon.png",
-          defaultChannel: "default",
-          sounds: ["./assets/sounds/notification.wav"],
-        },
-      ],
+
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
       [
@@ -67,9 +48,7 @@ export default {
             },
           },
           android: {
-            buildProperties: {
-              // Additional Android build properties if needed
-            },
+            buildProperties: {},
           },
         },
       ],
