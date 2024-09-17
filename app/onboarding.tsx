@@ -1,12 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import messaging, {
   firebase,
   FirebaseMessagingTypes,
 } from "@react-native-firebase/messaging";
+import { ProfileContext } from "./_layout";
 import { Text, View, Pressable, StyleSheet } from "react-native";
-import * as Notifications from "expo-notifications";
 import { router } from "expo-router";
 import firebaseConfig from "@/creds";
+import { getMyProfile } from "@/sdk";
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -14,15 +15,6 @@ if (!firebase.apps.length) {
   firebase.app(); // Use the existing app if already initialized
 }
 // Initialize Firebase only if it's not initialized
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    priority: Notifications.AndroidNotificationPriority.HIGH,
-  }),
-});
 
 function handleRegistrationError(errorMessage: string) {
   alert(errorMessage);
@@ -94,7 +86,11 @@ export default function Onboarding() {
 
   async function onClick() {
     const pushTokenString = await registerForPushNotificationsAsync();
-    const body = { fcmToken: pushTokenString, region: "europe-west" };
+    const userContext = useContext(ProfileContext);
+    const body = {
+      fcmToken: pushTokenString,
+      region: (await getMyProfile(userContext)).region,
+    };
 
     const res = await fetch("https://rebeal-server.vercel.app/register", {
       body: JSON.stringify(body),
