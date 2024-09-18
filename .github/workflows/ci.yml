@@ -40,7 +40,10 @@ jobs:
 
           ls -la
       - name: 🏃‍♂️ Prebuild
-        run: yarn expo prebuild --platform android
+        run: |
+          yarn expo prebuild --platform android
+          cp assets/images/icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp assets/sounds/notification.wav android/app/src/main/res/raw/notification.wav
 
       - name: 🚀 Build
         run: eas build --profile preview --non-interactive --platform android --local --output=./ReBeal-release.apk
