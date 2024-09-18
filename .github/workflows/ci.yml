@@ -43,6 +43,7 @@ jobs:
         run: |
           yarn expo prebuild --platform android
           cp assets/images/icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          mkdir -p android/app/src/main/res/raw
           cp assets/sounds/notification.wav android/app/src/main/res/raw/notification.wav
 
       - name: 🚀 Build
