@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef, useContext } from "react";
+import PushNotification from "react-native-push-notification";
 import messaging, {
   firebase,
   FirebaseMessagingTypes,
+  setBackgroundMessageHandler,
 } from "@react-native-firebase/messaging";
 import { ProfileContext } from "./_layout";
-import { Text, View, Pressable, StyleSheet } from "react-native";
+import { Text, View, Pressable, StyleSheet, Platform } from "react-native";
 import { router } from "expo-router";
 import firebaseConfig from "@/creds";
 import { getMyProfile } from "@/sdk";
@@ -14,11 +16,45 @@ if (!firebase.apps.length) {
 } else {
   firebase.app(); // Use the existing app if already initialized
 }
-// Initialize Firebase only if it's not initialized
 
 function handleRegistrationError(errorMessage: string) {
   alert(errorMessage);
   throw new Error(errorMessage);
+}
+
+// Register background handler
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log(remoteMessage);
+  if (remoteMessage.data?.type == "moment") {
+    console.log("moments");
+    PushNotification.localNotification({
+      title: "⚠️ Time to be real! ⚠️",
+      message:
+        "You have two minutes to post and see what your friends are up to!",
+      soundName: "notification.wav",
+      vibrate: true,
+      color: "red",
+      channelId: "moments",
+    });
+  }
+});
+
+async function createNotificationChannel() {
+  if (Platform.OS === "android") {
+    // Create the notification channel with a custom sound
+    PushNotification.deleteChannel("moments");
+    PushNotification.createChannel(
+      {
+        channelId: "moments", // Required
+        channelName: "ReBeal moments", // Required
+        channelDescription: "It's time to post!", // (optional) default: undefined
+        soundName: "notification.wav", // Sound file placed in android/app/src/main/res/raw
+        importance: 4, // Importance value (0-4)
+        vibrate: true, // (optional) default: true
+      },
+      (created) => console.log(`createChannel returned '${created}'`)
+    );
+  }
 }
 
 // Request user permission and get FCM token
@@ -33,6 +69,7 @@ async function registerForPushNotificationsAsync() {
 
     try {
       const pushTokenString = await messaging().getToken();
+      console.log(pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       handleRegistrationError(`FCM token retrieval failed: ${e}`);
@@ -50,6 +87,8 @@ export default function Onboarding() {
   >(undefined);
 
   useEffect(() => {
+    // Call this function during your app initialization
+    createNotificationChannel();
     const unsubscribeOnMessage = messaging().onMessage(
       async (remoteMessage) => {
         setNotification(remoteMessage);

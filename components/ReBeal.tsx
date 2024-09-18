@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
+
 import {
   View,
   Image,
@@ -10,8 +11,10 @@ import {
   Touchable,
   TouchableHighlight,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Href, router } from "expo-router";
+import { FriendsPostPost, User } from "@/sdk";
 
 function formatRelativeDate(date: number) {
   const now = new Date();
@@ -103,6 +106,119 @@ export function MyPost({
     </View>
   );
 }
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function SmallPost({
+  post,
+  width,
+  user,
+}: {
+  post: FriendsPostPost & { i: number };
+  width: number;
+  user: User;
+}) {
+  const primaryAspectRatio = 3 / 4;
+  const secondaryAspectRatio = 3 / 4;
+
+  const [primaryImage, setPrimaryImage] = useState<string>("");
+  const [secondaryImage, setSecondaryImage] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [retry, setRetry] = useState(0);
+
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        // Prefetch the images and handle retries
+
+        await Image.prefetch(post.primary.url);
+
+        await Image.prefetch(post.secondary.url);
+        setPrimaryImage(post.primary.url);
+
+        setSecondaryImage(post.secondary.url);
+        setLoading(false);
+      } catch (error) {
+        console.error("Image prefetch failed, retrying...", error);
+        if (retry < 3) {
+          setRetry(retry + 1); // Retry up to 3 times if an image fails to load
+        } else {
+          setLoading(false); // If retries exceed limit, stop
+        }
+      }
+    };
+
+    loadImages();
+  }, [post, retry]);
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          styles.smallPostContainer,
+          { height: width / primaryAspectRatio },
+        ]}
+      >
+        <ActivityIndicator size="small" color="#fff" />
+      </View>
+    );
+  }
+
+  return (
+    <View
+      style={[
+        styles.smallPostContainer,
+        { height: width / primaryAspectRatio },
+      ]}
+    >
+      {secondaryImage && (
+        <Image
+          style={styles.smallPostSecondary}
+          source={{
+            uri: secondaryImage,
+            height: width / 2.5 / secondaryAspectRatio,
+            width: width / 2.5,
+          }}
+          onLoad={() => console.log("Secondary image loaded")}
+          onError={(e) => {
+            console.error("Error loading secondary image", e.nativeEvent.error);
+            setSecondaryImage(""); // Remove broken image
+          }}
+        />
+      )}
+      {primaryImage && (
+        <Image
+          style={styles.smallPostPrimary}
+          source={{
+            uri: primaryImage,
+            height: width / primaryAspectRatio,
+            width: width,
+          }}
+          onLoad={() => console.log("Primary image loaded")}
+          onError={(e) => {
+            console.error("Error loading primary image", e.nativeEvent.error);
+            setPrimaryImage(""); // Remove broken image
+          }}
+        />
+      )}
+      <Text
+        style={{
+          fontSize: 12,
+          color: "white",
+          position: "absolute",
+          fontWeight: "bold",
+          bottom: 10,
+          left: 10,
+        }}
+      >
+        {user.username}
+      </Text>
+    </View>
+  );
+}
+
 export function ReBeal({
   primaryUrl,
   secondaryUrl,
@@ -369,6 +485,27 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   myContainer: {
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  smallPostPrimary: {
+    borderRadius: 10,
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  smallPostSecondary: {
+    borderRadius: 10,
+    borderColor: "black",
+    borderWidth: 1,
+    position: "absolute",
+    top: 5,
+    left: 5,
+    zIndex: 20,
+  },
+  smallPostContainer: {
+    margin: 2,
     flex: 1,
     padding: 20,
     alignItems: "center",

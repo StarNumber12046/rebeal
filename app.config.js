@@ -3,11 +3,14 @@ import { defineConfig } from "expo-build-properties";
 export default {
   expo: {
     name: "rebeal",
-    slug: "rebeal",
+    slug: "ReBeal.",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "rebeal",
+    extra: {
+      assets: ["./assets/sounds/notification.wav"],
+    },
     userInterfaceStyle: "automatic",
     splash: {
       image: "./assets/images/splash.png",
@@ -23,6 +26,7 @@ export default {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#000000",
       },
+      appName: "ReBeal.",
       googleServicesFile: "./google-services.json",
       package: "com.rebeal",
       config: {
@@ -35,8 +39,8 @@ export default {
       favicon: "./assets/images/favicon.png",
     },
     plugins: [
+      "./plugins/largeHeap",
       "expo-router",
-
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
       [
