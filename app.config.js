@@ -3,7 +3,7 @@ import { defineConfig } from "expo-build-properties";
 export default {
   expo: {
     name: "rebeal",
-    slug: "slug",
+    slug: "rebeal",
     version: "1.0.0",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
