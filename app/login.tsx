@@ -135,10 +135,15 @@ export default function LoginScreen() {
           onChange={handleChange}
         ></TextInput>
       </View>
-      <Text style={styles.topText}>
-        Not working? Try <Link href="/tokenLogin">Token Login</Link>
-      </Text>
-      <Text>{error}</Text>
+      <View style={{ flex: 1 }}>
+        <Text style={[{ color: "white" }]}>
+          Not working? Try{" "}
+          <Link href="/tokenLogin" style={{ fontWeight: "bold" }}>
+            Token Login
+          </Link>
+        </Text>
+        <Text style={{ color: "red" }}>{error}</Text>
+      </View>
       <Pressable
         style={styles.buttonContainer}
         onPress={trySendOTP}
@@ -189,7 +194,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   container: {
-    flex: 1,
     flexDirection: "row",
     gap: 8,
     alignItems: "flex-start",

@@ -8,8 +8,8 @@ export default function TokenLogin() {
   const [accessToken, setAccessToken] = useState<string>("");
   const [refreshToken, setRefreshToken] = useState<string>("");
   async function login() {
-    AsyncStorage.setItem("authToken", accessToken);
-    AsyncStorage.setItem("refreshToken", refreshToken);
+    await AsyncStorage.setItem("authToken", accessToken);
+    await AsyncStorage.setItem("refreshToken", refreshToken);
     router.push("/onboarding");
   }
   const [error, setError] = useState<string>("");
