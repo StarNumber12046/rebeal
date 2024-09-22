@@ -44,6 +44,7 @@
     "firebase-admin": "^12.5.0",
     "happy-headers": "^1.5.0",
     "libphonenumber-js": "^1.11.7",
+    "pusher-js": "^8.4.0-rc2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.5",

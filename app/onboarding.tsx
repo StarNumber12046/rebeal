@@ -25,6 +25,7 @@ function handleRegistrationError(errorMessage: string) {
 // Register background handler
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log(remoteMessage);
+  if (remoteMessage.notification) return; // Ignore notifications
   if (remoteMessage.data?.type == "moment") {
     console.log("moments");
     PushNotification.localNotification({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
-
+import * as Buffer from "buffer";
 import {
   View,
   Image,
@@ -167,7 +167,15 @@ export function SmallPost({
   }
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={() =>
+        router.push(
+          ("/post/" +
+            Buffer.Buffer.from(JSON.stringify(post)).toString(
+              "base64"
+            )) as Href<string>
+        )
+      }
       style={[
         styles.smallPostContainer,
         { height: width / primaryAspectRatio },
@@ -215,7 +223,7 @@ export function SmallPost({
       >
         {user.username}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -235,6 +243,7 @@ export function ReBeal({
   visible,
   blurred,
   userId,
+  postData,
 }: {
   primaryUrl: string;
   secondaryUrl: string;
@@ -251,6 +260,7 @@ export function ReBeal({
   visible: boolean;
   blurred: boolean;
   userId: string;
+  postData: FriendsPostPost & { user: User };
 }) {
   console.log(blurred);
   const [bigImage, setBigImage] = useState<"primary" | "secondary">("primary");
@@ -312,15 +322,26 @@ export function ReBeal({
               }}
             />
           </TouchableOpacity>
-          <Image
-            style={styles.image}
-            blurRadius={blurred ? 200 : 0}
-            source={{
-              uri: visible ? bigUrl : "rebeal://react-logo.png",
-              height: windowWidth / primaryAspectRatio,
-              width: windowWidth,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() =>
+              router.push(
+                ("/post/" +
+                  Buffer.Buffer.from(JSON.stringify(postData)).toString(
+                    "base64"
+                  )) as Href<string>
+              )
+            }
+          >
+            <Image
+              style={styles.image}
+              blurRadius={blurred ? 200 : 0}
+              source={{
+                uri: visible ? bigUrl : "rebeal://react-logo.png",
+                height: windowWidth / primaryAspectRatio,
+                width: windowWidth,
+              }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
