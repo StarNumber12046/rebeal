@@ -47,7 +47,9 @@ jobs:
           cp assets/sounds/notification.wav android/app/src/main/res/raw/notification.wav
 
       - name: 🚀 Build
-        run: eas build --profile preview --non-interactive --platform android --local --output=./ReBeal-release.apk
+        run: |
+          eas build --profile preview --non-interactive --platform android --local --output=./ReBeal-release.apk
+          ls -la -/**
 
       - name: 😊 Create Release
         id: create_release
