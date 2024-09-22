@@ -49,8 +49,12 @@ jobs:
       - name: 🚀 Build
         run: |
           eas build --profile preview --non-interactive --platform android --local --output=./ReBeal-release.apk
-          ls -la -/**
-
+          ls -la ./**
+      - name: 📦 Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: ReBeal-release.apk
+          path: ./ReBeal-release.apk
       - name: 😊 Create Release
         id: create_release
         uses: actions/create-release@v1
