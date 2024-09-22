@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     zIndex: 99,
   },
   text: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "bold",
     alignSelf: "center", // Center each text element vertically
     color: "white",
