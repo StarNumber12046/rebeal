@@ -6,14 +6,14 @@ export default {
     slug: "rebeal",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/adaptive-icon.png",
     scheme: "rebeal",
     extra: {
       assets: ["./assets/sounds/notification.wav"],
     },
     userInterfaceStyle: "automatic",
     splash: {
-      image: "./assets/images/splash.png",
+      image: "./assets/images/adaptive-icon.png",
       resizeMode: "contain",
       backgroundColor: "#000000",
     },

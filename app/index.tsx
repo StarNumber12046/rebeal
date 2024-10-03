@@ -35,10 +35,6 @@ export default function App() {
   const [myPosts, setMyPosts] = useState<UserPost[]>([]);
   const [me, setMe] = useState<FullUser | null>(null);
   const userContext = useContext(ProfileContext);
-  const translateY = useSharedValue(0);
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-  }));
 
   async function checkAuth() {
     if (
@@ -75,110 +71,85 @@ export default function App() {
     }));
   };
 
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const debounce = (func: Function, delay: number) => {
-    // Clear any existing timeout
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-
-    // Set a new timeout
-    debounceTimeoutRef.current = setTimeout(() => {
-      func();
-    }, delay);
-  };
-  const onGestureEvent = (event: any) => {
-    if (event.nativeEvent.translationY > 50 && translateY.value === 0) {
-      // Check if the user swipes down and is at the top
-      debounce(() => {
-        router.push("/gridView"); // Navigate to a new screen
-      }, 200);
-    }
-  };
-
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent}>
-      <Animated.View style={[animatedStyle]}>
-        <View>
-          <TopBar
-            action={() => {
-              getFriendsPosts().then((p) => setFriendsPosts(p));
-              getMyPosts().then((p) => setMyPosts(p));
-              getMyProfile(userContext).then((p) => setMe(p));
-            }}
-          />
-          <IOScrollView style={styles.scrollView}>
-            <ScrollView
-              horizontal
+    <View>
+      <TopBar
+        action={() => {
+          getFriendsPosts().then((p) => setFriendsPosts(p));
+          getMyPosts().then((p) => setMyPosts(p));
+          getMyProfile(userContext).then((p) => setMe(p));
+        }}
+      />
+      <IOScrollView style={styles.scrollView}>
+        <ScrollView
+          horizontal
+          style={{
+            width: "100%",
+            flexDirection: "row",
+          }}
+          contentContainerStyle={{
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          {myPosts.map((value) => (
+            <InView
+              key={value.id}
               style={{
-                width: "100%",
-                flexDirection: "row",
-              }}
-              contentContainerStyle={{
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                width: "100%",
+                flex: 1,
+                height: 240,
+                marginHorizontal: -10,
               }}
             >
-              {myPosts.map((value) => (
+              <MyPost
+                primaryHeight={value.primary.height}
+                primaryWidth={value.primary.width}
+                primaryUrl={value.primary.url}
+                secondaryHeight={value.secondary.height}
+                secondaryWidth={value.secondary.width}
+                secondaryUrl={value.secondary.url}
+              />
+            </InView>
+          ))}
+        </ScrollView>
+        <View style={{ width: "100%", top: -80 }}>
+          {friendsPosts.map(
+            (value) =>
+              value && (
                 <InView
                   key={value.id}
-                  style={{
-                    flex: 1,
-                    height: 240,
-                    marginHorizontal: -10,
-                  }}
+                  onChange={(inView) =>
+                    handleVisibilityChange(value.id, inView)
+                  }
                 >
-                  <MyPost
+                  <ReBeal
+                    postData={value}
+                    userId={value.user.id}
                     primaryHeight={value.primary.height}
                     primaryWidth={value.primary.width}
                     primaryUrl={value.primary.url}
                     secondaryHeight={value.secondary.height}
                     secondaryWidth={value.secondary.width}
                     secondaryUrl={value.secondary.url}
+                    userName={value.user.username}
+                    userUrl={(value.user.profilePicture ?? { url: "" }).url}
+                    isLate={value.isLate}
+                    postedAt={value.postedAt}
+                    lateInSeconds={value.lateInSeconds}
+                    isMain={value.isMain}
+                    visible={visibleItems[value.id]} // Pass visibility state here
+                    blurred={myPosts.length <= 0}
                   />
                 </InView>
-              ))}
-            </ScrollView>
-            <View style={{ width: "100%", top: -80 }}>
-              {friendsPosts.map(
-                (value) =>
-                  value && (
-                    <InView
-                      key={value.id}
-                      onChange={(inView) =>
-                        handleVisibilityChange(value.id, inView)
-                      }
-                    >
-                      <ReBeal
-                        postData={value}
-                        userId={value.user.id}
-                        primaryHeight={value.primary.height}
-                        primaryWidth={value.primary.width}
-                        primaryUrl={value.primary.url}
-                        secondaryHeight={value.secondary.height}
-                        secondaryWidth={value.secondary.width}
-                        secondaryUrl={value.secondary.url}
-                        userName={value.user.username}
-                        userUrl={(value.user.profilePicture ?? { url: "" }).url}
-                        isLate={value.isLate}
-                        postedAt={value.postedAt}
-                        lateInSeconds={value.lateInSeconds}
-                        isMain={value.isMain}
-                        visible={visibleItems[value.id]} // Pass visibility state here
-                        blurred={myPosts.length <= 0}
-                      />
-                    </InView>
-                  )
-              )}
-              <View style={{ width: "100%", height: 0 }}></View>
-            </View>
-          </IOScrollView>
-          <CameraButton shown={me?.canPost ?? true} />
+              )
+          )}
+          <View style={{ width: "100%", height: 0 }}></View>
         </View>
-      </Animated.View>
-    </PanGestureHandler>
+      </IOScrollView>
+      <CameraButton shown={me?.canPost ?? true} />
+    </View>
   );
 }
 

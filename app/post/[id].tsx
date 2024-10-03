@@ -25,6 +25,9 @@ export default function Post() {
     Buffer.from(params.id, "base64").toString()
   );
 
+  console.log(postData);
+  Image.prefetch(postData.primary.url);
+  Image.prefetch(postData.secondary.url);
   const [bigImage, setBigImage] = useState<"primary" | "secondary">("primary");
 
   const title = (
@@ -93,7 +96,7 @@ export default function Post() {
               uri:
                 bigImage === "primary"
                   ? postData.secondary.url
-                  : postData.secondary.url,
+                  : postData.primary.url,
               width: 100,
               height: 100 / (3 / 4),
             }}

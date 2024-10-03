@@ -5,7 +5,7 @@ import { Link, router } from "expo-router";
 import getHeaders from "happy-headers";
 import { useContext, useEffect, useState } from "react";
 import { View, Pressable, Text, Image, StyleSheet } from "react-native";
-
+import React from "react";
 export const TopBar = ({
   small = false,
   action = () => {
@@ -32,15 +32,30 @@ export const TopBar = ({
   return (
     <View style={small ? styles.smallTopbar : styles.topbar}>
       {!small && (
-        <Link href="/friends" asChild>
-          <MaterialIcons name="people" size={24} color="white" />
-        </Link>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 8,
+            width: 80,
+          }}
+        >
+          <Link href="/friends" asChild>
+            <MaterialIcons name="people" size={24} color="white" />
+          </Link>
+          <Link href="/gridView" asChild>
+            <MaterialIcons name="grid-view" size={24} color="white" />
+          </Link>
+        </View>
       )}
       <Pressable onPress={() => action()}>
         <Text style={styles.text}>ReBeal.</Text>
       </Pressable>
       {!small && (
-        <Link href="/profile" asChild>
+        <Link
+          href="/profile"
+          style={{ width: 80, flexDirection: "row-reverse" }}
+          asChild
+        >
           <Pressable>
             <Text style={styles.streakText}>🔥</Text>
             <Image

@@ -322,7 +322,7 @@ export function ReBeal({
               }}
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          <Pressable
             onPress={() =>
               router.push(
                 ("/post/" +
@@ -341,7 +341,7 @@ export function ReBeal({
                 width: windowWidth,
               }}
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>
