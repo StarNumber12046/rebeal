@@ -15,10 +15,9 @@ import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
 import { TopBar } from "@/components/TopBar";
 import { MenuBar } from "@/components/MenuBar";
-
 export default function GridView() {
   const screenWidth = Dimensions.get("window").width; // Get the screen width
-  const itemWidth = screenWidth / 3 - 5; // Calculate item width with some margin
+  const itemWidth = screenWidth / 3 - 10; // Adjust width based on margin
   const [friendsPosts, setFriendsPosts] = useState<any[]>([]);
   let last = 0;
 
@@ -27,11 +26,18 @@ export default function GridView() {
       setFriendsPosts(posts.map((item) => ({ ...item, i: last++ })))
     );
   }, []);
+
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <MenuBar arrowLocation="left" />
       <FlatList
         style={styles.container}
+        contentContainerStyle={{
+          flexDirection: "column",
+          paddingLeft: 10,
+          paddingBottom: 40,
+          marginTop: -20,
+        }}
         numColumns={3}
         data={friendsPosts}
         initialNumToRender={1}
@@ -50,16 +56,5 @@ const styles = StyleSheet.create({
     marginTop: 70,
     width: "100%",
     height: "100%",
-  },
-  item: {
-    color: "white",
-    fontSize: 24,
-    margin: 10,
-    fontWeight: "bold",
-    textAlign: "center",
-    backgroundColor: "#000000",
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: "white",
   },
 });

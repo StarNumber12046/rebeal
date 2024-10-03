@@ -215,10 +215,11 @@ export function SmallPost({
         style={{
           fontSize: 12,
           color: "white",
-          position: "absolute",
+          position: "relative",
           fontWeight: "bold",
-          bottom: 10,
-          left: 10,
+          bottom: 30,
+          width: 100,
+          left: -5,
         }}
       >
         {user.username}
@@ -520,9 +521,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "black",
     borderWidth: 1,
-    position: "absolute",
-    top: 5,
-    left: 5,
+    position: "relative",
+    bottom: -75,
+    left: -35,
     zIndex: 20,
   },
   smallPostContainer: {
@@ -531,5 +532,6 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
   },
 });
