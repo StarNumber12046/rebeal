@@ -1,4 +1,4 @@
-import { defineConfig } from "expo-build-properties";
+import androidManifestPlugin from "./plugins/largeHeap"; // Import the plugin
 
 export default {
   expo: {
@@ -39,7 +39,7 @@ export default {
       favicon: "./assets/images/favicon.png",
     },
     plugins: [
-      "./plugins/largeHeap",
+      androidManifestPlugin, // Register the custom plugin here
       "expo-router",
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
